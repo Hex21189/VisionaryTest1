@@ -4,29 +4,24 @@ using System.Collections;
 /// <summary>
 /// Logic for controlling spawned bullets.
 /// </summary>
+[RequireComponent(typeof(Movement))]
 public class Bullet : MonoBehaviour
 {
     private Transform myTransform;
+    private Movement movement;
 
 	/// <summary>
 	/// Initialize bullet in random direction.
 	/// </summary>
 	protected void Start()
     {
-        myTransform = transform;
-        myTransform.eulerAngles = new Vector3(myTransform.eulerAngles.z, myTransform.eulerAngles.y, Random.Range(-45, 45));
+        float randomAngle = Mathf.Deg2Rad * Random.Range(-45, 45);
+        
+        movement = GetComponent<Movement>();
+        movement.Direction = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
+        //myTransform.eulerAngles = new Vector3(myTransform.eulerAngles.z, myTransform.eulerAngles.y, Random.Range(-45, 45));
 	}
 	
-	/// <summary>
-	/// Move this bullet forward.
-    /// TODO: make speed adjustable.
-    /// TODO: seperate bullet logic for more interesting bullet movement models.
-	/// </summary>
-	protected void Update()
-    {
-        myTransform.position += myTransform.right * 10 * Time.deltaTime; // here
-	}
-
     /// <summary>
     /// Destory this bullet when it collides with an enemy.
     /// </summary>

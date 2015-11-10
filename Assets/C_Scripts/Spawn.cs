@@ -1,34 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spawn : MonoBehaviour {
-
+/// <summary>
+/// Attach to spawner to create new enemies for the game after every spawn interval has been reached.
+/// </summary>
+public class Spawn : MonoBehaviour
+{
     public GameObject enemy;
 
-	// Use this for initialization
-	void Start () {
-	
-	}
+    [Range(0.1f, 100.0f)]
+    public float spawnInterval = 1.0f;
+    private float timer = 0;
 
-    float timer = 0;
-	// Update is called once per frame
-	void Update () {
-
-        if (timer > 1)
+	/// <summary>
+	/// Spawn a new wave of enemies every time the timer completes.
+	/// </summary>
+	protected void Update()
+    {
+        if (timer >= spawnInterval)
         {
-            timer = 0;
-            var numEnemies = Random.Range(4, 30);
+            int numEnemies = Random.Range(4, 30);
+
             for (var i = 0; i < numEnemies; ++i)
             {
-                var spawned = GameObject.Instantiate(enemy);
-                            spawned.GetComponent<Transform>().position = GetComponent<Transform>().position + Vector3.down * Random.Range(0, 10) + Vector3.left * Random.Range(-2, 2);
+                GameObject spawned = GameObject.Instantiate(enemy);
+                spawned.transform.position = transform.position + Vector3.down * Random.Range(0, 10) + Vector3.left * Random.Range(-2, 2);
             }
+
+            timer = 0;
         }
 
-        timer += Time.fixedDeltaTime;
+        timer += Time.deltaTime;
 	}
-
-    void OnTriggerEnter (Collider collider)
+    
+    /// <summary>
+    /// Destories the Spawner when colliding with a bullet.
+    /// TODO: Remove this because it's dumb.
+    /// </summary>
+    /// <param name="collider">Colliding bullet.</param>
+    protected void OnTriggerEnter(Collider collider)
     {
         if (collider.tag == "Bullet")
         {

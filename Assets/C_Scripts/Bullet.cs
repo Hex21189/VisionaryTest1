@@ -24,14 +24,14 @@ public class Bullet : MonoBehaviour
 	/// </summary>
 	protected void Update()
     {
-        myTransform.position += myTransform.right * 10 * Time.fixedDeltaTime; // here
+        myTransform.position += myTransform.right * 10 * Time.deltaTime; // here
 	}
 
     /// <summary>
     /// Destory this bullet when it collides with an enemy.
     /// </summary>
     /// <param name="collider">Enemy collider.</param>
-    protected void OnTriggerEnter(Collider collider)
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Enemy")
         {

@@ -27,14 +27,14 @@ public class Enemy : MonoBehaviour
 	protected void Update()
     {
         myTransform.position -= myTransform.right * 3 * Time.deltaTime;
-        myTransform.position += Mathf.Sign(Time.time + randomOffset) * Vector3.down * Time.deltaTime;
+        myTransform.position += Vector3.down * Time.deltaTime;
 	}
 
     /// <summary>
     /// Desotry this enemy when it collides with a bullet object.
     /// </summary>
     /// <param name="collider">Bullet collider.</param>
-    protected void OnTriggerEnter(Collider collider)
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Bullet")
         {

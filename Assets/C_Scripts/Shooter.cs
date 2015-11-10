@@ -55,7 +55,7 @@ public class Shooter : MonoBehaviour
     /// Destory this object if it collides with an enemy object. TODO: this needs to be generalized to work on multiple characters.
     /// </summary>
     /// <param name="collider">Enemy collider.</param>
-    protected void OnTriggerEnter(Collider collider)
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Enemy")
         {

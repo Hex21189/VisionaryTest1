@@ -38,7 +38,7 @@ public class Spawn : MonoBehaviour
     /// TODO: Remove this because it's dumb.
     /// </summary>
     /// <param name="collider">Colliding bullet.</param>
-    protected void OnTriggerEnter(Collider collider)
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.tag == "Bullet")
         {

@@ -7,9 +7,12 @@ using System.Collections;
 [RequireComponent(typeof(Movement))]
 public class Shooter : MonoBehaviour
 {
-    public GameObject bulletPrefab;
+    [Header("Movement Bounds")]
     public Vector2 maxBounds;
     public Vector2 minBounds;
+
+    [Header("Bullet Data")]
+    public SimplePool bulletPool;   // TODO: place in weapon class
 
     [Range(0.0f, 2.0f)]
     public float bulletSpawnDelay = 0.08f;
@@ -37,7 +40,8 @@ public class Shooter : MonoBehaviour
         { 
             if (Input.GetButton("fire"))
             {
-                GameObject spawnedBullet = GameObject.Instantiate(bulletPrefab);
+                GameObject spawnedBullet = bulletPool.GetAvailableObject();
+                spawnedBullet.GetComponent<Bullet>().Initialize(this);
                 spawnedBullet.transform.position = myTransform.position + (1.05f * myTransform.right);
             }
 

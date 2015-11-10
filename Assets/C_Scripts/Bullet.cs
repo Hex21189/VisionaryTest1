@@ -7,33 +7,23 @@ using System.Collections;
 [RequireComponent(typeof(Movement))]
 public class Bullet : MonoBehaviour
 {
+    public Shooter owner; // TODO: point to weapon
     public float lifeSpan = 2.0f;
+
     private Transform myTransform;
     private Movement movement;
-
-	/// <summary>
-	/// Initialize bullet in random direction.
-	/// </summary>
-	protected void Start()
-    {
-        float randomAngle = Mathf.Deg2Rad * Random.Range(-45, 45);
-        
-        movement = GetComponent<Movement>();
-        movement.Direction = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
-        //myTransform.eulerAngles = new Vector3(myTransform.eulerAngles.z, myTransform.eulerAngles.y, Random.Range(-45, 45));
-	}
+    private float timer;
 	
     /// <summary>
     /// Manage bullet life time.
-    /// TODO: create object pooling to avoid destorying and reinitiating.
     /// </summary>
     protected void Update()
     {
-        lifeSpan -= Time.deltaTime;
+        timer -= Time.deltaTime;
 
-        if (lifeSpan <= 0)
+        if (timer <= 0)
         {
-            Destroy(gameObject);
+            owner.bulletPool.ReleaseObject(gameObject);
         }
     }
 
@@ -45,7 +35,21 @@ public class Bullet : MonoBehaviour
     {
         if (collider.tag == "Enemy")
         {
-            Destroy(gameObject);
+            owner.bulletPool.ReleaseObject(gameObject);
         }
+    }
+
+    /// <summary>
+    /// Initialize bullet in random direction.
+    /// </summary>
+    public void Initialize(Shooter owner)
+    {
+        this.owner = owner;
+        timer = lifeSpan;
+
+        float randomAngle = Mathf.Deg2Rad * Random.Range(-45, 45);
+
+        movement = GetComponent<Movement>();
+        movement.Direction = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
     }
 }

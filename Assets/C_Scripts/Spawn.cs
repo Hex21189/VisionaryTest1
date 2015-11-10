@@ -6,7 +6,7 @@ using System.Collections;
 /// </summary>
 public class Spawn : MonoBehaviour
 {
-    public GameObject enemy;
+    public SimplePool enemyPool;
 
     [Range(0.1f, 100.0f)]
     public float spawnInterval = 1.0f;
@@ -23,7 +23,8 @@ public class Spawn : MonoBehaviour
 
             for (var i = 0; i < numEnemies; ++i)
             {
-                GameObject spawned = GameObject.Instantiate(enemy);
+                GameObject spawned = enemyPool.GetAvailableObject();
+                spawned.GetComponent<Enemy>().Initialize(this);
                 spawned.transform.position = transform.position + Vector3.down * Random.Range(0, 10) + Vector3.left * Random.Range(-2, 2);
             }
 
@@ -32,17 +33,4 @@ public class Spawn : MonoBehaviour
 
         timer += Time.deltaTime;
 	}
-    
-    /// <summary>
-    /// Destories the Spawner when colliding with a bullet.
-    /// TODO: Remove this because it's dumb.
-    /// </summary>
-    /// <param name="collider">Colliding bullet.</param>
-    protected void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Bullet")
-        {
-            Destroy(collider.gameObject);
-        }
-    }
 }

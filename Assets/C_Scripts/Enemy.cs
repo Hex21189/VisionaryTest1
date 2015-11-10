@@ -9,17 +9,17 @@ using System.Collections;
 public class Enemy : MonoBehaviour
 {
     public float lifeSpan = 2.0f;
+ 
     private Movement movement;
+    private Spawn owner;
+    private float timer;    // CONSIDER: it may be better to destory the enemies when they enter a trigger that catches them rather than lifespan.
 
     /// <summary>
     /// Load initial object settings.
     /// </summary>
-    protected void Start()
+    protected void Awake()
     {
         movement = GetComponent<Movement>();
-
-        Vector2 tempDirection = new Vector2(-3, -1);
-        movement.Direction = tempDirection;
 	}
 
     /// <summary>
@@ -28,11 +28,11 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected void Update()
     {
-        lifeSpan -= Time.deltaTime;
+        timer -= Time.deltaTime;
 
-        if (lifeSpan <= 0)
+        if (timer <= 0)
         {
-            Destroy(gameObject);
+            owner.enemyPool.ReleaseObject(gameObject);
         }
     }
 
@@ -46,7 +46,18 @@ public class Enemy : MonoBehaviour
     {
         if (collider.tag == "Bullet")
         {
-            Destroy(gameObject);
+            owner.enemyPool.ReleaseObject(gameObject);
         }
+    }
+
+    public void Initialize(Spawn owner)
+    {
+        this.owner = owner;
+
+        // TODO: this should be randmized later to make this game less boring. Also move to AI script
+        Vector2 tempDirection = new Vector2(-3, -1);
+        movement.Direction = tempDirection;
+
+        timer = lifeSpan;
     }
 }

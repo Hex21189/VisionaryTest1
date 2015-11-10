@@ -7,6 +7,7 @@ using System.Collections;
 [RequireComponent(typeof(Movement))]
 public class Bullet : MonoBehaviour
 {
+    public float lifeSpan = 2.0f;
     private Transform myTransform;
     private Movement movement;
 
@@ -22,6 +23,20 @@ public class Bullet : MonoBehaviour
         //myTransform.eulerAngles = new Vector3(myTransform.eulerAngles.z, myTransform.eulerAngles.y, Random.Range(-45, 45));
 	}
 	
+    /// <summary>
+    /// Manage bullet life time.
+    /// TODO: create object pooling to avoid destorying and reinitiating.
+    /// </summary>
+    protected void Update()
+    {
+        lifeSpan -= Time.deltaTime;
+
+        if (lifeSpan <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     /// <summary>
     /// Destory this bullet when it collides with an enemy.
     /// </summary>

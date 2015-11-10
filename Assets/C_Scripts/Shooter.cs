@@ -47,7 +47,7 @@ public class Shooter : MonoBehaviour
         }
         if (Input.GetButton("Down"))
         {
-
+            myTransform.position -= new Vector3(0, 2 * Time.deltaTime, 0);
         }
     }
 

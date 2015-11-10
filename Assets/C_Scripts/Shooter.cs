@@ -8,6 +8,8 @@ using System.Collections;
 public class Shooter : MonoBehaviour
 {
     public GameObject bulletPrefab;
+    public Vector2 maxBounds;
+    public Vector2 minBounds;
 
     [Range(0.0f, 2.0f)]
     public float bulletSpawnDelay = 0.08f;
@@ -43,21 +45,21 @@ public class Shooter : MonoBehaviour
         }
 
         timer += Time.deltaTime;
-        Vector2 moveDirection = new Vector2();
+        Vector2 moveDirection = Vector2.zero;
 
-        if (Input.GetButton("Up"))
+        if (Input.GetButton("Up") && myTransform.position.y < maxBounds.y)
         {
             moveDirection.y = 1;
         }
-        if (Input.GetButton("Down"))
+        if (Input.GetButton("Down") && myTransform.position.y > minBounds.y)
         {
             moveDirection.y = -1;
         }
-        if (Input.GetButton("Left"))
+        if (Input.GetButton("Left") && myTransform.position.x > minBounds.x)
         {
             moveDirection.x = -1;
         }
-        if (Input.GetButton("Right"))
+        if (Input.GetButton("Right") && myTransform.position.x < maxBounds.x)
         {
             moveDirection.x = 1;
         }

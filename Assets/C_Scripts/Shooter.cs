@@ -68,6 +68,11 @@ public class Shooter : MonoBehaviour
             moveDirection.x = 1;
         }
 
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SpawnMagnetPowerUp();
+        }
+
         movement.Direction = moveDirection;
     }
 
@@ -83,5 +88,18 @@ public class Shooter : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public GameObject magnetPowerPrefab;
+    public float spawnDistance;
+
+    private void SpawnMagnetPowerUp()
+    {
+        GameObject spawnedMagnet = GameObject.Instantiate(magnetPowerPrefab);
+        spawnedMagnet.transform.position = myTransform.position + spawnDistance * Vector3.right;
+
+        spawnedMagnet.GetComponent<MagnetShield>().player = myTransform;
+        spawnedMagnet.GetComponent<MagnetShield>().moveRight = true;
+        spawnedMagnet.GetComponent<RepeateTexture>().target = myTransform;
     }
 }

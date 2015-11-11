@@ -8,7 +8,7 @@ using System.Collections.Generic;
 /// </summary>
 public class RepeateTexture : SimplePool
 {
-    public Vector2 end;   
+    public Transform target;   
 
     private Transform myTransform;
     private List<Transform> repeatedSprites;
@@ -48,6 +48,7 @@ public class RepeateTexture : SimplePool
         // Get the current sprite with an unscaled size
         Vector2 spriteSize = new Vector2(spriteBounds.size.x / myTransform.localScale.x, spriteBounds.size.y / myTransform.localScale.y);
         Vector2 start = new Vector2(myTransform.position.x, myTransform.position.y);
+        Vector2 end = new Vector2(target.position.x, target.position.y);
         Vector2 nextPosition = start;
         Vector2 rightVector = (end - start).normalized;
 

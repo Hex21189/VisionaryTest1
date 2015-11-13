@@ -21,7 +21,7 @@ public class Bullet : MonoBehaviour
     {
         timer -= Time.deltaTime;
 
-        if (timer <= 0)
+        if (timer <= 0 && owner != null)
         {
             owner.bulletPool.ReleaseObject(gameObject);
         }
@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour
     /// <param name="collider">Enemy collider.</param>
     protected void OnTriggerEnter2D(Collider2D collider)
     {
-        if (collider.tag == "Enemy")
+        if (owner != null)
         {
             owner.bulletPool.ReleaseObject(gameObject);
         }

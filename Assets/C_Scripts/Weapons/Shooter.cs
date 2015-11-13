@@ -41,6 +41,7 @@ public class Shooter : MonoBehaviour
                 GameObject spawnedBullet = bulletPool.GetAvailableObject();
                 spawnedBullet.GetComponent<Bullet>().Initialize(this, scatterAngle);
                 spawnedBullet.transform.position = myTransform.position + (1.05f * myTransform.right);
+                spawnedBullet.layer = gameObject.layer;
             }
 
             timer = 0;

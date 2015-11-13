@@ -23,9 +23,7 @@ public class Spawn : MonoBehaviour
 
             for (var i = 0; i < numEnemies; ++i)
             {
-                GameObject spawned = enemyPool.GetAvailableObject();
-                spawned.GetComponent<Enemy>().Initialize(this);
-                spawned.transform.position = transform.position + Vector3.down * Random.Range(0, 10) + Vector3.left * Random.Range(-2, 2);
+                SpawnEnemy();
             }
 
             timer = 0;
@@ -33,4 +31,16 @@ public class Spawn : MonoBehaviour
 
         timer += Time.deltaTime;
 	}
+
+    protected void OnTrigger2DEnter(Collider2D collider)
+    {
+        // TODO: if collides with planet destroy ship and planet
+    }
+
+    private void SpawnEnemy()
+    {
+        GameObject spawned = enemyPool.GetAvailableObject();
+        spawned.GetComponent<Enemy>().Initialize(this);
+        spawned.transform.position = transform.position + Vector3.down * Random.Range(0, 10) + Vector3.left * Random.Range(-2, 2);
+    }
 }

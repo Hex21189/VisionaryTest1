@@ -45,10 +45,24 @@ public class Spawn : MonoBehaviour
         timer += Time.deltaTime;
 	}
 
-    protected void OnTrigger2DEnter(Collider2D collider)
+    private float pushbackPerHit = 0.05f;
+
+    protected void OnTriggerEnter2D(Collider2D collider)
     {
-        // TODO: if collides with bullet, push back.
-        // TODO: if collides with planet destroy ship and planet
+        if (collider.tag == "Bullet")
+        {
+            Movement movement = collider.GetComponent<Movement>();
+            if (movement)
+            {
+                transform.position = new Vector3(transform.position.x + Mathf.Sign(movement.Direction.x) * pushbackPerHit, 
+                                                 transform.position.y, 
+                                                 transform.position.z);
+            }
+        }
+        else if (collider.tag == "Planet")
+        {
+            // TODO: if collides with planet destroy ship and planet
+        }
     }
 
     private void SpawnEnemy()
@@ -63,7 +77,6 @@ public class Spawn : MonoBehaviour
         }
 
         spawned.GetComponent<Enemy>().Initialize(this, direction);
-        spawned.transform.position = transform.position + 
-                                     new Vector3(Mathf.Sign(direction.x) * Random.Range(minXDist, maxXDist), Random.Range(minY, maxY));
+        spawned.transform.position = new Vector3(transform.position.x + Mathf.Sign(direction.x) * Random.Range(minXDist, maxXDist), Random.Range(minY, maxY));
     }
 }

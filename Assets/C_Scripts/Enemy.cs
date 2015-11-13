@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
     /// <param name="collider">Bullet collider.</param>
     protected void OnTriggerEnter2D(Collider2D collider)
     {
-        if (owner != null)
+        if (collider.tag == "Bullet" && owner != null)
         {
             owner.enemyPool.ReleaseObject(gameObject);
         }

@@ -14,8 +14,8 @@ public class MagnetShield : MonoBehaviour, IPowerUp
     public float distanceFromPlayer = 1.0f;
     [Space(10.0f)]
     public LayerMask enemyLayerMask;
-    public int shieldLayer;
     public float spawnDistance;
+    public float maxTravelDistance = 10.0f;
 
     [Header("Attract Stats")]
     public float attractRadius;
@@ -69,10 +69,11 @@ public class MagnetShield : MonoBehaviour, IPowerUp
     /// <returns>Null.</returns>
     private IEnumerator ActivatePowerUp()
     {
+        Vector3 startPosition = transform.position;
+
         // Wait to be in range
-        while (!hasGrabbedEnemies)
+        while (!hasGrabbedEnemies && Vector3.Distance(startPosition, transform.position) < maxTravelDistance)
         {
-            // TODO: give up if gone to far
             movement.Direction = player.right;
             yield return null;
         }
@@ -111,9 +112,13 @@ public class MagnetShield : MonoBehaviour, IPowerUp
         else
         {
             // TODO: find a proper place to destroy the magnet
-            while (transform.position.x > 0)
+            while (Mathf.Sign(player.transform.right.x) > 0 ? 
+                   player.transform.position.x < transform.position.x : 
+                   player.transform.position.x > transform.position.x)
             {
-                movement.Direction = -1 * player.transform.right;
+                Vector3 offsetPosition = player.position;
+                offsetPosition.x += Mathf.Sign(-player.transform.right.x) * 0.1f;
+                movement.Direction = (offsetPosition - transform.position).normalized;
                 yield return null;
             }
 
@@ -144,7 +149,7 @@ public class MagnetShield : MonoBehaviour, IPowerUp
 
         enemyMovement.Direction = Vector2.zero;
         enemyMovement.speed = 0;
-        enemyMovement.gameObject.layer = shieldLayer;
+        enemyMovement.gameObject.layer = gameObject.layer;
     }
 
     /// <summary>

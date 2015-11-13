@@ -42,13 +42,12 @@ public class MagnetShield : MonoBehaviour, IPowerUp
     protected void OnDrawGizmos()
     {
         // Move all enemies onto magnet
-        Vector2 direction = topAttractPoint - bottomAttractPoint;
         Vector2 midPoint = (topAttractPoint + bottomAttractPoint) / 2;
         midPoint.x *= transform.right.x;
         midPoint.y *= transform.right.y;
         Vector2 castPosition = (Vector2)transform.position + midPoint;
 
-        Gizmos.DrawWireCube(castPosition, Vector3.one);
+        Gizmos.DrawWireCube(castPosition, topAttractPoint - bottomAttractPoint);
     }
 
     /// <summary>

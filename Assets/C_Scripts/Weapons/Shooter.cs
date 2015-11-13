@@ -19,7 +19,6 @@ public class Shooter : MonoBehaviour
 
     private float timer = 0;
     private Transform myTransform; // Cached transform for quick look ups in the update loop.
-    private Movement movement;
 
     /// <summary>
     /// Load initial object settings.
@@ -27,7 +26,6 @@ public class Shooter : MonoBehaviour
     protected void Start()
     {
         myTransform = transform;
-        movement = GetComponent<Movement>();
     }
 
     /// <summary>
@@ -49,32 +47,5 @@ public class Shooter : MonoBehaviour
         }
 
         timer += Time.deltaTime;
-      
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SpawnMagnetPowerUp();
-        }
-    }
-
-    /// <summary>
-    /// Destory this object if it collides with an enemy object. TODO: this 
-    /// needs to be generalized to work on multiple characters or objects (for 
-    /// example bullets from the enemy).
-    /// </summary>
-    /// <param name="collider">Enemy collider.</param>
-    protected void OnTriggerEnter2D(Collider2D collider)
-    {
-        if (collider.tag == "Enemy")
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public GameObject magnetPowerPrefab;
-    public float spawnDistance;
-
-    private void SpawnMagnetPowerUp()
-    {
-
     }
 }

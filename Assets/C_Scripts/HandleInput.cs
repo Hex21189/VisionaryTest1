@@ -3,46 +3,77 @@ using System.Collections;
 
 public class HandleInput : MonoBehaviour
 {
-    public Movement playerOneMovement;
-    public Shooter  playerOneShooter;
-    public PlayerPowerUpManager playerOnePowerUpManager;
+    public Transform player;
 
-    public Movement playerTwoMovement;
+    [Header("Input Axies/Buttons")]
+    public string horizontalAxis;
+    public string verticalAxis;
+    public string shootButton;
+    public string powerUpButton;
 
+    private Movement movement;
+    private Shooter shooter;
+    private PlayerPowerUpManager powerUpManager;
+
+    // TODO: delete
     public GameObject magnetPowerUpPrefab;
 
-	// Update is called once per frame
-	void Update()
+    protected void Awake()
     {
-        if (playerOneMovement != null)
+        movement = player.GetComponent<Movement>();
+        shooter = player.GetComponent<Shooter>();
+        powerUpManager = player.GetComponent<PlayerPowerUpManager>();
+
+        if (movement == null)
         {
-            Vector2 playerOneDirection = Vector2.zero;
+            Debug.LogWarning(string.Format("No movement script attached to player {0}. Cannot process movement logic", transform.name));
+        }
 
-            if (Input.GetButton("Up"))
+        if (shooter == null)
+        {
+            Debug.LogWarning(string.Format("No shooter script attached to player {0}. Cannot process shooting logic", transform.name));
+        }
+
+        if (powerUpManager == null)
+        {
+            Debug.LogWarning(string.Format("No power up management script attached to player {0}. Cannot process powerup logic", transform.name));
+        }
+    }
+
+	// Update is called once per frame
+	protected void Update()
+    {
+        if (!LockInput)
+        {
+            if (movement != null)
             {
-                playerOneDirection.y = 1;
-            }
-            if (Input.GetButton("Down"))
-            {
-                playerOneDirection.y = -1;
-            }
-            if (Input.GetButton("Left"))
-            {
-                playerOneDirection.x = -1;
-            }
-            if (Input.GetButton("Right"))
-            {
-                playerOneDirection.x = 1;
+                Vector2 direction = new Vector2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis));
+                movement.Direction = direction;
             }
 
-            playerOneShooter.shoot = Input.GetButton("fire");
-            playerOneMovement.Direction = playerOneDirection;
-
-            if (Input.GetKeyDown(KeyCode.A))
+            if (shooter != null)
             {
-                playerOnePowerUpManager.StoredPowerUp = magnetPowerUpPrefab;
-                playerOnePowerUpManager.ActivatePowerUp(playerOneMovement.transform);
+                shooter.shoot = Input.GetButton(shootButton);
+            }
+
+            if (powerUpManager != null)
+            {
+                if (Input.GetButtonDown(powerUpButton))
+                {
+                    powerUpManager.StoredPowerUp = magnetPowerUpPrefab;
+                    powerUpManager.ActivatePowerUp(player);
+                }
             }
         }
+        else
+        {
+            if (movement != null)
+                movement.Direction = Vector2.zero;
+
+            if (shooter != null)
+                shooter.shoot = false;
+        }
 	}
+
+    public bool LockInput { get; set; }
 }

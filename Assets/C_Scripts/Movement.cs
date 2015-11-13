@@ -8,8 +8,14 @@ using System.Collections;
 /// </summary>
 public class Movement : MonoBehaviour
 {
+    [Header("Stats")]
     public bool faceMovementDirection;
     public float speed;
+
+    [Header("Movement Bounds")]
+    public bool limitMovement;
+    public Vector2 minBounds;
+    public Vector2 maxBounds;
 
     private Vector2 direction;
     private Transform myTransform; // Cached transform for quick look ups in the update loop.
@@ -17,7 +23,7 @@ public class Movement : MonoBehaviour
     /// <summary>
     /// Initialization logic.
     /// </summary>
-    protected void Start()
+    protected void Awake()
     {
         myTransform = transform;
     }
@@ -49,6 +55,21 @@ public class Movement : MonoBehaviour
             {
                 direction.Normalize();
             }
+
+            if (limitMovement)
+            {
+                if ((myTransform.position.y > maxBounds.y && direction.y > 0) || 
+                    (myTransform.position.y < minBounds.y && direction.y < 0))
+                {
+                    direction.y = 0;
+                }
+
+                if ((myTransform.position.x > maxBounds.x && direction.x > 0) ||
+                    (myTransform.position.x < minBounds.x && direction.x < 0 ))
+                {
+                    direction.x = 0;
+                }
+            }            
         }
     }
 }

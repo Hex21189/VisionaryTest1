@@ -42,14 +42,21 @@ public class Bullet : MonoBehaviour
     /// <summary>
     /// Initialize bullet in random direction.
     /// </summary>
-    public void Initialize(Shooter owner)
+    public void Initialize(Shooter owner, float scatterAngle)
     {
         this.owner = owner;
         timer = lifeSpan;
-
-        float randomAngle = Mathf.Deg2Rad * Random.Range(-45, 45);
-
         movement = GetComponent<Movement>();
-        movement.Direction = new Vector2(Mathf.Cos(randomAngle), Mathf.Sin(randomAngle));
+
+        if (scatterAngle > 0)
+        {
+            float randomAngle = Mathf.Deg2Rad * Random.Range(-scatterAngle, scatterAngle);
+            movement.Direction = new Vector2(owner.transform.right.x * Mathf.Cos(randomAngle),
+                                             owner.transform.right.y * Mathf.Sin(randomAngle));
+        }
+        else
+        {
+            movement.Direction = owner.transform.right;
+        }
     }
 }

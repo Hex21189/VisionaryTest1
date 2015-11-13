@@ -7,12 +7,12 @@ using System.Collections;
 [RequireComponent(typeof(Movement))]
 public class Shooter : MonoBehaviour
 {
-    [Header("Movement Bounds")]
-    public Vector2 maxBounds;
-    public Vector2 minBounds;
-
     [Header("Bullet Data")]
     public SimplePool bulletPool;   // TODO: place in weapon class
+    public bool shoot;
+
+    [Range(0.0f, 45.0f)]
+    public float scatterAngle;
 
     [Range(0.0f, 2.0f)]
     public float bulletSpawnDelay = 0.08f;
@@ -38,10 +38,10 @@ public class Shooter : MonoBehaviour
     {
         if (timer >= bulletSpawnDelay)
         { 
-            if (Input.GetButton("fire"))
+            if (shoot)
             {
                 GameObject spawnedBullet = bulletPool.GetAvailableObject();
-                spawnedBullet.GetComponent<Bullet>().Initialize(this);
+                spawnedBullet.GetComponent<Bullet>().Initialize(this, scatterAngle);
                 spawnedBullet.transform.position = myTransform.position + (1.05f * myTransform.right);
             }
 
@@ -49,31 +49,11 @@ public class Shooter : MonoBehaviour
         }
 
         timer += Time.deltaTime;
-        Vector2 moveDirection = Vector2.zero;
-
-        if (Input.GetButton("Up") && myTransform.position.y < maxBounds.y)
-        {
-            moveDirection.y = 1;
-        }
-        if (Input.GetButton("Down") && myTransform.position.y > minBounds.y)
-        {
-            moveDirection.y = -1;
-        }
-        if (Input.GetButton("Left") && myTransform.position.x > minBounds.x)
-        {
-            moveDirection.x = -1;
-        }
-        if (Input.GetButton("Right") && myTransform.position.x < maxBounds.x)
-        {
-            moveDirection.x = 1;
-        }
-
+      
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             SpawnMagnetPowerUp();
         }
-
-        movement.Direction = moveDirection;
     }
 
     /// <summary>
@@ -95,11 +75,6 @@ public class Shooter : MonoBehaviour
 
     private void SpawnMagnetPowerUp()
     {
-        GameObject spawnedMagnet = GameObject.Instantiate(magnetPowerPrefab);
-        spawnedMagnet.transform.position = myTransform.position + spawnDistance * Vector3.right;
 
-        spawnedMagnet.GetComponent<MagnetShield>().player = myTransform;
-        spawnedMagnet.GetComponent<MagnetShield>().moveRight = true;
-        spawnedMagnet.GetComponent<RepeateTexture>().target = myTransform;
     }
 }

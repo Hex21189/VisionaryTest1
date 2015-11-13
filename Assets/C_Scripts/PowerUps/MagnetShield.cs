@@ -5,16 +5,17 @@ using System.Collections;
 /// Logic for managing the magnetic shield power up effect.
 /// </summary>
 [RequireComponent(typeof(Movement))]
-public class MagnetShield : MonoBehaviour
+[RequireComponent(typeof(RepeateTexture))]
+public class MagnetShield : MonoBehaviour, IPowerUp
 {
     public Transform player;
 
     [Header("Magnet Settings")]
     public float distanceFromPlayer = 1.0f;
-    public bool moveRight;
     [Space(10.0f)]
     public LayerMask enemyLayerMask;
-    public int shieldLayer;  
+    public int shieldLayer;
+    public float spawnDistance;
 
     [Header("Attract Stats")]
     public float attractRadius;
@@ -25,18 +26,30 @@ public class MagnetShield : MonoBehaviour
     private bool hasGrabbedEnemies;
     private Movement movement;
     private int shieldStrength;
+    private RepeateTexture repeatTexture;
 
 	/// <summary>
 	/// Initialize the magnet power and launch the behavior logic.
 	/// </summary>
-	protected void Start()
+	protected void Awake()
     {
         hasGrabbedEnemies = false;
         shieldStrength = 0;
         movement = GetComponent<Movement>();
+        repeatTexture = GetComponent<RepeateTexture>();
+	}
 
-        StartCoroutine(ActivatePowerUp());
-	}  
+    protected void OnDrawGizmos()
+    {
+        // Move all enemies onto magnet
+        Vector2 direction = topAttractPoint - bottomAttractPoint;
+        Vector2 midPoint = (topAttractPoint + bottomAttractPoint) / 2;
+        midPoint.x *= transform.right.x;
+        midPoint.y *= transform.right.y;
+        Vector2 castPosition = (Vector2)transform.position + midPoint;
+
+        Gizmos.DrawWireCube(castPosition, Vector3.one);
+    }
 
     /// <summary>
     /// Retract shield when it hits an enemy.
@@ -61,13 +74,16 @@ public class MagnetShield : MonoBehaviour
         while (!hasGrabbedEnemies)
         {
             // TODO: give up if gone to far
-            movement.Direction = moveRight ? Vector2.right : Vector2.left;
+            movement.Direction = player.right;
             yield return null;
         }
 
         // Move all enemies onto magnet
         Vector2 direction = topAttractPoint - bottomAttractPoint;
-        Vector2 castPosition = new Vector2(transform.position.x, transform.position.y) + (topAttractPoint + bottomAttractPoint) / 2;
+        Vector2 midPoint = (topAttractPoint + bottomAttractPoint) / 2;
+        midPoint.x *= transform.right.x;
+        midPoint.y *= transform.right.y;
+        Vector2 castPosition = (Vector2)transform.position + midPoint;
 
         foreach (RaycastHit2D hit in Physics2D.CircleCastAll(castPosition, attractRadius, direction, direction.magnitude, enemyLayerMask.value))
         {
@@ -76,7 +92,7 @@ public class MagnetShield : MonoBehaviour
             // TODO: tie into enemies on death event to reduce shield strength.
             // TODO: set strenght number on magnet label.
             Movement enemyMovement = hit.transform.GetComponent<Movement>();
-            Vector2 randomOffset = bottomAttractPoint + Random.Range(0.0f, 1.0f) * (topAttractPoint - bottomAttractPoint);
+            Vector2 randomOffset = bottomAttractPoint + Random.Range(0.0f, 1.0f) * direction;
             StartCoroutine(MoveEnemyToShieldPoint(enemyMovement, randomOffset));
         }
 
@@ -98,7 +114,7 @@ public class MagnetShield : MonoBehaviour
             // TODO: find a proper place to destroy the magnet
             while (transform.position.x > 0)
             {
-                movement.Direction = Vector2.left;
+                movement.Direction = -1 * player.transform.right;
                 yield return null;
             }
 
@@ -144,5 +160,21 @@ public class MagnetShield : MonoBehaviour
             //TODO: Despawn
             GameObject.Destroy(gameObject);
         }
+    }
+
+    public Sprite GetIconSprite()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void Activate(Transform owner)
+    {
+        player = owner;
+        repeatTexture.target = player;
+
+        transform.position = player.position + spawnDistance * player.right; // spawn behind  
+        transform.right = player.right;
+
+        StartCoroutine(ActivatePowerUp());
     }
 }

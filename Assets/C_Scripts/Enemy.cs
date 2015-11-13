@@ -50,13 +50,12 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Initialize(Spawn owner)
+    public void Initialize(Spawn owner, Vector3 direction)
     {
         this.owner = owner;
 
         // TODO: this should be randmized later to make this game less boring. Also move to AI script
-        Vector2 tempDirection = new Vector2(-3, -1);
-        movement.Direction = tempDirection;
+        movement.Direction = direction;
 
         timer = lifeSpan;
     }

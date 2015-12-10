@@ -87,9 +87,23 @@ public class MagnetShield : MonoBehaviour, IPowerUp
     /// </summary>
     protected void Update()
     {
-        if (triggerEffectsFininished && capturedEnemies.Count <= 0)
+        if (triggerEffectsFininished)
         {
-            Destroy(gameObject);
+            // sanity check for timing bugs
+            bool emergencyDestoryRequired = true;
+
+            foreach (Transform enemy in capturedEnemies)
+            {
+                if (enemy != null && enemy.gameObject.activeSelf)
+                {
+                    emergencyDestoryRequired = false;
+                }
+            }
+
+            if (emergencyDestoryRequired)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -192,10 +206,10 @@ public class MagnetShield : MonoBehaviour, IPowerUp
             StartCoroutine(MoveEnemyToShieldPoint(enemyMovement, randomOffset));
         }     
 
-        triggerEffectsFininished = true;
-
         if (capturedEnemies.Count > 0)
         {
+            triggerEffectsFininished = true;
+
             // Move magnet to front of player
             bool wasPositive = Mathf.Sign(Vector2.Distance(transform.position, player.position) - distanceFromPlayer) >= 0;
             bool isPositive = wasPositive;

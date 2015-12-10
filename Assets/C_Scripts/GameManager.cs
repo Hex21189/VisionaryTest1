@@ -31,10 +31,11 @@ public class GameManager : MonoBehaviour
         // Note: this is just an example loop. this will not handle multiple AIs yet.
         for (int i = 0; i < players.Count; i++)
         {
-            if (PlayerPrefs.HasKey(LoadLevel.VS_AI_KEY) && PlayerPrefs.GetInt(LoadLevel.VS_AI_KEY) == i)
+            PlayerAi ai = players[i].ship.GetComponent<PlayerAi>();
+
+            if (ai != null)
             {
-                PlayerAi ai = players[i].ship.GetComponent<PlayerAi>();
-                ai.enabled = true;
+                ai.enabled = PlayerPrefs.HasKey(LoadLevel.VS_AI_KEY) && PlayerPrefs.GetInt(LoadLevel.VS_AI_KEY) == i;
             }
         }
     }

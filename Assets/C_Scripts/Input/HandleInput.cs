@@ -49,7 +49,12 @@ public class HandleInput : MonoBehaviour
     /// </summary>
 	protected void Update()
     {
-        if (!LockInput && (ai == null || !ai.enabled))
+        if (ai != null && ai.enabled)
+        {
+            return;
+        }
+
+        if (!LockInput)
         {
             if (movement != null)
             {

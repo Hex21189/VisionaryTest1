@@ -20,6 +20,10 @@ public class LoadLevel : MonoBehaviour
         {
             PlayerPrefs.SetInt(VS_AI_KEY, 1);
         }
+        else
+        {
+            PlayerPrefs.DeleteKey(VS_AI_KEY);
+        }
 
         Application.LoadLevel(gameLevelName);
     }

@@ -4,7 +4,7 @@
 [X] 2. Allow 4-directional movement.
 [ ] 3. Add proper game over/menu loop.
 [ ] 4. Add two power-ups of your choice (new weapon, faster movement, sheild, something else you think is cool).
-[ ] 5. Make it fun and challenging.
+[X] 5. Make it fun and challenging.
 [X] 6. Optimize and make your own.
 
 #Bonus points!!

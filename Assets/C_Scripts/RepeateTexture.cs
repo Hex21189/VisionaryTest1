@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -54,9 +53,10 @@ public class RepeateTexture : SimplePool
 
         int index = 0;
         float dist = Vector2.Distance(end, nextPosition);
+		float sizeX = Mathf.Abs (spriteSize.x);
 
         // Handle unscaled repeated textures
-        while (Vector3.Distance(end, nextPosition) > spriteSize.x)
+		while (Vector3.Distance(end, nextPosition) > sizeX)
         {
             // Position sprite
             Transform sprite = GetSprite(index++);
@@ -68,7 +68,7 @@ public class RepeateTexture : SimplePool
             dist = Vector2.Distance(end, nextPosition);
             float yDist = end.y - nextPosition.y;
             float xDist = end.x - nextPosition.x;
-            nextPosition += new Vector2(xDist * spriteSize.x / dist, yDist * spriteSize.x / dist);
+			nextPosition += new Vector2(xDist * sizeX / dist, yDist * sizeX / dist);
         }
 
         // Position and scale final sprite

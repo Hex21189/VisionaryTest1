@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/// <summary>
+/// Interface for all powerups.
+/// </summary>
 public interface IPowerUp
 {
     Sprite GetIconSprite();
